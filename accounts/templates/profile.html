@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ human_card.first_name }}'s Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {% block content %} 
+    <style>
+        
+        .profile-card {
+            max-width: 400px;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .profile-card img {
+            width: 100%;
+            height: 230px;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            padding: 20px;
+        }
+
+        .profile-details h2 {
+            margin: 10px 0 5px;
+            font-size: 1.8rem;
+            color: #005bb5;
+        }
+
+        .profile-details p {
+            font-size: 1rem;
+            margin: 5px 0;
+            color: #555;
+        }
+
+        .profile-details .detail {
+            text-align: left;
+            margin: 8px 0;
+            font-size: 0.95rem;
+        }
+
+        .profile-details .detail span {
+            font-weight: 600;
+            color: #005bb5;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f7f7f7;
+            border-top: 1px solid #ddd;
+        }
+
+        .actions button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            background-color: #005bb5;
+            color: white;
+            font-weight: 500;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .actions button:hover {
+            background-color: #74b9ff;
+            transform: scale(1.05);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .profile-card {
+                max-width: 90%;
+            }
+
+            .profile-details h2 {
+                font-size: 1.5rem;
+            }
+
+            .profile-details .detail {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="profile-card">
+        <img src="{{ human_card.profile_pic.url }}" alt="Profile Picture">
+        <div class="profile-details">
+            <h2>{{ human_card.first_name }} {{ human_card.last_name }}</h2>
+            <p>HumanCard ID: <strong>{{ human_card.humancard_id }}</strong></p>
+            <div class="detail"><span>Age:</span> {{ human_card.age }}</div>
+            <div class="detail"><span>Blood Group:</span> {{ human_card.blood_group }}</div>
+            <div class="detail"><span>Phone:</span> {{ human_card.phone_number }}</div>
+            <div class="detail"><span>Email:</span> {{ human_card.email }}</div>
+            <div class="detail"><span>Address:</span> {{ human_card.address }}</div>
+        </div>
+        <div class="actions">
+            <button onclick="location.href='/edit-profile/'">Edit Profile</button>
+            <button onclick="location.href='/logout/'">Logout</button>
+        </div>
+    </div>
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+</head>
+<body>
+    <h1>Email Verified Successfully!</h1>
+    <p>Your email has been verified. You can now log in.</p>
+    <a
+       
+        class="btn btn-primary"
+        href="{% url "login" %}"
+        role="button"
+        >Login</a
+    >
+    <div id="time">
+        
+    </div>
+    
+</body>
+<script>
+    function myfun(){
+        window.location = `{% url "login" %}`
+    }
+            let time = 5;
+            let div = document.getElementById('time');
+    
+            function delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+    
+            async function counter(time) {
+                while (time) {
+                    div.innerHTML = time;
+                    time -= 1;
+                    await delay(1000);
+                }
+                myfun();  
+            }
+    
+        
+
+                counter(time);
+</script>
+
+</html>

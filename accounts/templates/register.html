@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            padding-top: 80px; /* Space for the navbar */
+            line-height: 1.6;
+        }
+
+        /* Card Container */
+        .registration-card {
+            background: #ffffff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            margin: auto;
+        }
+
+        /* Form Styling */
+        .registration-card h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        .registration-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-group input {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+
+        /* Video and Capture Section */
+        .video-capture-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 350px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+        }
+
+        .capture-controls {
+            display: flex;
+            gap: 15px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        #capture {
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        #capture:hover {
+            background-color: #45a049;
+        }
+
+        .submit-button {
+            background-color: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            background-color: #155a9c;
+        }
+
+        /* Footer */
+        .footer-note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        /* Responsive Adjustments */
+        @media screen and (max-width: 480px) {
+            .registration-card {
+                margin: 20px;
+                padding: 20px;
+            }
+
+            .capture-controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="registration-card">
+        <h1>User Registration</h1>
+        <form class="registration-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                {{ user_form.as_p }}
+            </div>
+            
+            <div class="form-group">
+                {{ human_card_form.as_p }}
+            </div>
+
+            <div class="video-capture-section">
+                <label for="video">Capture Profile Photo:</label>
+                <video id="video" autoplay></video>
+                
+                <div class="capture-controls">
+                    <button type="button" id="capture">Capture Photo</button>
+                </div>
+                
+                <canvas id="canvas"></canvas>
+                <input type="hidden" name="profile_pic" id="profile_pic">
+            </div>
+
+            <button type="submit" class="submit-button">Register</button>
+        </form>
+        
+        <p class="footer-note">
+            By registering, you agree to our Terms and Conditions.
+        </p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const profilePicInput = document.getElementById('profile_pic');
+            const captureButton = document.getElementById('capture');
+        
+            // Access the webcam
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(stream => {
+                    video.srcObject = stream;
+                })
+                .catch(err => {
+                    console.error("Error accessing webcam: ", err);
+                    alert("Webcam access is required for profile photo capture.");
+                });
+        
+            // Capture photo on button click
+            captureButton.addEventListener('click', () => {
+                const context = canvas.getContext('2d');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const dataURL = canvas.toDataURL('image/png');
+                profilePicInput.value = dataURL;  // Store the base64 image in the hidden input
+                alert("Photo captured successfully!");
+            });
+        });
+    </script>
+</body>
+</html>
+{% endblock %}
